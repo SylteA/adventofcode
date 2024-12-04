@@ -4,7 +4,7 @@ with open("input.txt", "r") as f:
     lines = f.readlines()
 
 
-def sol1():
+def part1():
     left, right = [], []
 
     for line in lines:
@@ -24,7 +24,7 @@ def sol1():
     return total_distance
 
 
-def sol2():
+def part2():
     left, right = [], defaultdict(lambda: 0)
 
     for line in lines:
@@ -43,4 +43,4 @@ def sol2():
 
 
 if __name__ == '__main__':
-    print(sol2())
+    print(part2())
