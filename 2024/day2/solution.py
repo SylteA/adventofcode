@@ -1,3 +1,6 @@
+with open("input.txt", "r") as f:
+    lines = f.readlines()
+
 def validate(digits: list[int]) -> int:
     incremental = digits[0] < digits[1]
 
@@ -51,7 +54,4 @@ def part2():
 
 
 if __name__ == '__main__':
-    with open("input.txt", "r") as f:
-        lines = f.readlines()
-
     print(part2())
