@@ -15,7 +15,8 @@ def breaks_rules(page: list[int]):
 
 
 def part1():
-    valid_pages = []
+    global invalid_pages
+    middles = []
 
     for page in pages:
         page = page[::-1]
@@ -25,26 +26,32 @@ def part1():
         for i in range(len(page)):
             if breaks_rules(page[i:]):
                 valid = False
+                invalid_pages.append(page[::-1])
                 break
 
         if valid:
-            valid_pages.append(page[int(len(page) / 2)])
+            middles.append(page[int(len(page) / 2)])
 
-    return sum(valid_pages)
+    return sum(middles)
 
 
 def part2():
-    valid_pages = []
+    middles = []
 
-    for page in pages:
-        page = page[::-1]
+    for page in invalid_pages:
+        l, r = 0, 1
+        while r < len(page):
+            if page[l] in rules[page[r]]:
+                page[l], page[r] = page[r], page[l]
 
-        for i in range(len(page)):
-            for rule in rules[page[i]]:
-                if rule in page[i:]:
+            r += 1
+            if r == len(page):
+                l += 1
+                r = l + 1
 
+        middles.append(page[len(page) // 2])
 
-    return sum(valid_pages)
+    return sum(middles)
 
 
 def parse_data(file):
@@ -54,16 +61,17 @@ def parse_data(file):
     raw_rules, raw_pages = data.split("\n\n")
     p = [[int(num) for num in page.split(",")] for page in raw_pages.splitlines()]
 
-    r = defaultdict(list)
+    r = defaultdict(set)
     for rule in raw_rules.splitlines():
         a, b = map(int, rule.split("|"))
-        r[a].append(b)
+        r[a].add(b)
 
     return p, r
 
 
 if __name__ == '__main__':
-    pages, rules = parse_data("example.txt")
+    pages, rules = parse_data("input.txt")
+    invalid_pages = []
 
     print(part1())
     print(part2())
