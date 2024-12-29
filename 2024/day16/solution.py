@@ -19,11 +19,12 @@ directions = [
 ]
 
 
-def part1():
-    y, x = locate("S")
+def part1(grid: list[list[str]]):
+    y, x = locate(grid, "S")
 
     to_check = [Node(y, x, 1, 0, None)]
     nodes = {(y, x): to_check[0]}
+    paths = []
 
     while to_check:
         node = to_check.pop(0)
@@ -40,45 +41,52 @@ def part1():
 
             n = Node(ny, nx, direction, score, node)
 
-            if grid[ny][nx] == "E":
-                print("REACHED END!", n.s)
-
             if grid[ny][nx] == "#":
                 continue
 
-            if (ny, nx) in nodes and nodes[(ny, nx)].s < score:
+            if (ny, nx) in nodes and nodes[(ny, nx)].s + 1000 < score:
                 continue
+
+            if grid[ny][nx] == "E":
+                paths.append(n)
 
             nodes[(ny, nx)] = n
             to_check.append(n)
 
-    return nodes
+    return paths
 
 
-def part2():
-    tiles = 543
+def part2(paths: list[Node]):
+    visited = set()
 
-    return tiles
+    for path in paths:
+        while path.p is not None:
+            visited.add((path.y, path.x))
+            path = path.p
+
+    return len(visited) + 1
 
 
-def parse_grid(string: str) -> list[list[str]]:
-    return [[*line] for line in string.splitlines()]
-
-
-def locate(target):
+def locate(grid, target):
     for y, row in enumerate(grid):
         if target in row:
             return y, row.index(target)
     return None
 
 
-if __name__ == "__main__":
-    with open("example.txt") as f:
+def main():
+    with open("input.txt") as f:
         raw = f.read()
 
-    grid = parse_grid(raw)
-    height, width = len(grid), len(grid[0])
+    grid = [[*line] for line in raw.splitlines()]
 
-    scores = part1()
-    print(scores[locate("E")].s)
-    print(part2())
+    paths = part1(grid)
+    shortest = min(paths, key=lambda p: p.s)
+    paths = [path for path in paths if path.s == shortest.s]
+
+    print(shortest.s)
+    print(part2(paths))
+
+
+if __name__ == "__main__":
+    main()
