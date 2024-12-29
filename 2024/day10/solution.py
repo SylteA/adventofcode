@@ -2,7 +2,6 @@ from dataclasses import dataclass
 import typing as t
 
 
-
 @dataclass
 class Node:
     y: int
@@ -33,7 +32,7 @@ def walk(head):
         if in_grid(head.y - dy, head.x - dx):
             if grid[head.y - dy][head.x - dx] == head.value + 1:
                 head.children.append(walk(Node(head.y - dy, head.x - dx, grid[head.y - dy][head.x - dx], [])))
-    
+
     return head
 
 
